@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dentry – Your Dental Voice Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #fdfdfd;
+      color: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 2rem;
+      flex-direction: column;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      color: #666;
+    }
+    input[type="email"] {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      background-color: #007aff;
+      color: white;
+      cursor: pointer;
+    }
+    #chatbot-container {
+      display: none;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="landing">
+    <h1>Welcome to Dentry 👋</h1>
+    <p>Your 24/7 AI dental companion. Enter your email to start chatting.</p>
+    <input type="email" id="emailInput" placeholder="Enter your email" required />
+    <button onclick="unlockChat()">Start Chat</button>
+  </div>
+
+  <div id="chatbot-container">
+    <!-- Voiceflow Chatbot will be injected here -->
+  </div>
+
+  <script>
+    function unlockChat() {
+      const email = document.getElementById('emailInput').value;
+      if (!email || !email.includes("@")) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
+      localStorage.setItem("userEmail", email);
+
+      document.getElementById("landing").style.display = "none";
+      document.getElementById("chatbot-container").style.display = "block";
+
+      // ✅ Load Voiceflow widget ONLY after email is submitted
+      (function(d, t) {
+        var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+        v.onload = function() {
+          window.voiceflow.chat.load({
+            verify: { projectID: '688f872dcf8c872d081117ce' },
+            url: 'https://general-runtime.voiceflow.com',
+            versionID: 'production',
+            voice: {
+              url: "https://runtime-api.voiceflow.com"
+            }
+          });
+        };
+        v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
+        v.type = "text/javascript";
+        s.parentNode.insertBefore(v, s);
+      })(document, 'script');
+    }
+  </script>
+
+</body>
+</html>
